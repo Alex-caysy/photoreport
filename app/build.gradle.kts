@@ -2,6 +2,8 @@ plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.compose.compiler)
   alias(libs.plugins.kotlin.serialization)
+  alias(libs.plugins.ksp)
+  alias(libs.plugins.room)
 }
 
 android {
@@ -9,7 +11,8 @@ android {
     compileSdk = 36
     defaultConfig {
         applicationId = "com.caysy.photoreport"
-        minSdk = 24
+        // Android 10. Scoped storage (API 29) is the baseline the app targets.
+        minSdk = 29
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -39,6 +42,11 @@ android {
     }
 }
 
+// Schema files are committed so future migrations can be diffed and tested.
+room {
+    schemaDirectory("$projectDir/schemas")
+}
+
 kotlin {
     jvmToolchain(17)
 }
@@ -61,6 +69,7 @@ dependencies {
   implementation(libs.androidx.compose.ui)
   implementation(libs.androidx.compose.ui.tooling.preview)
   implementation(libs.androidx.compose.material3)
+  implementation(libs.androidx.compose.material.icons.core)
   // Tooling
   debugImplementation(libs.androidx.compose.ui.tooling)
   // Instrumented tests
@@ -81,4 +90,14 @@ dependencies {
   implementation(libs.androidx.navigation3.ui)
   implementation(libs.androidx.navigation3.runtime)
   implementation(libs.androidx.lifecycle.viewmodel.navigation3)
+
+  // Room: stores report and photo metadata (not the image bytes themselves).
+  implementation(libs.androidx.room.runtime)
+  implementation(libs.androidx.room.ktx)
+  ksp(libs.androidx.room.compiler)
+
+  // Local tests: Room in-memory database for DAO tests
+  testImplementation(libs.androidx.room.testing)
+  testImplementation(libs.robolectric)
+  testImplementation(libs.androidx.test.core)
 }

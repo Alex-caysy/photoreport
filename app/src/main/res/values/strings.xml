@@ -1,3 +1,25 @@
 <resources>
+    <!-- App -->
     <string name="app_name">PhotoReport</string>
+
+    <!-- Report list -->
+    <string name="reports_title">Отчёты</string>
+    <string name="reports_new">Новый отчёт</string>
+    <string name="reports_empty_title">Отчётов пока нет</string>
+    <string name="reports_empty_hint">Нажмите «+», чтобы создать первый отчёт</string>
+    <string name="report_name_label">Название объекта</string>
+    <string name="report_subtitle">Фото: %1$d · %2$s</string>
+    <string name="report_delete_title">Удалить отчёт?</string>
+    <string name="report_delete_message">«%1$s» и все его фотографии будут удалены безвозвратно.</string>
+
+    <!-- Report detail -->
+    <string name="report_detail_empty">В отчёте ещё нет фотографий</string>
+    <string name="report_detail_add">Добавить фото</string>
+    <string name="report_not_found">Отчёт не найден</string>
+
+    <!-- Common actions -->
+    <string name="action_create">Создать</string>
+    <string name="action_cancel">Отмена</string>
+    <string name="action_delete">Удалить</string>
+    <string name="action_save">Сохранить</string>
 </resources>
