@@ -1,0 +1,29 @@
+# --- Android / Gradle build output ---
+*.iml
+.gradle/
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# --- IntelliJ / Android Studio ---
+.idea/
+*.hprof
+
+# --- Secrets: never commit these ---
+# Release signing keys and their passwords.
+*.jks
+*.keystore
+keystore.properties
+signing.properties
+# API keys, tokens, service credentials.
+secrets.properties
+api-keys.properties
+google-services.json
+.env
+
+# --- OS / editor noise ---
+.DS_Store
+Thumbs.db
+*.swp
