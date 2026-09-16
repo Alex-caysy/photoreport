@@ -2,9 +2,8 @@
 
 Android application for photo reports.
 
-> **Status:** early development. The project currently contains the initial
-> scaffold only — the sample screen from the project template is still in place
-> and the real functionality is not implemented yet.
+> **Status:** in development. Report storage and the report list screen are
+> working. Photos, captions, GPS and export are still to come.
 
 ## Tech stack
 
@@ -15,8 +14,9 @@ Android application for photo reports.
 | Gradle (wrapper) | 9.1.0 |
 | UI | Jetpack Compose, Material 3 (BOM 2026.03.01) |
 | Navigation | Navigation 3 (`androidx.navigation3`) |
+| Database | Room 2.8.5 (via KSP 2.3.12) |
 | Async | Kotlin coroutines, Flow |
-| minSdk / targetSdk / compileSdk | 24 / 36 / 36 |
+| minSdk / targetSdk / compileSdk | 29 / 36 / 36 |
 
 ## Requirements
 
@@ -65,19 +65,34 @@ on a device directly (Android will ask to allow installation from that source).
 
 ```
 app/src/main/java/com/caysy/photoreport/
-├── MainActivity.kt          # entry point, hosts the Compose UI
-├── Navigation.kt            # NavDisplay setup
-├── NavigationKeys.kt        # type-safe navigation destinations
+├── MainActivity.kt              # entry point, hosts the Compose UI
+├── Navigation.kt                # NavDisplay setup and wiring
+├── NavigationKeys.kt            # type-safe navigation destinations
 ├── data/
-│   └── DataRepository.kt    # data source behind an interface
-├── theme/                   # Material 3 colors, typography, theme
-└── ui/main/                 # main screen + its ViewModel
+│   ├── ReportRepository.kt      # data access behind an interface
+│   └── db/                      # Room entities, DAO and database
+├── theme/                       # Material 3 colors, typography, theme
+├── ui/reports/                  # report list screen + ViewModel
+└── ui/reportdetail/             # one report screen + ViewModel
 ```
 
-The app follows a simple unidirectional flow: the `ViewModel` exposes a
-`StateFlow` of UI state, and composables render it. Data access sits behind the
-`DataRepository` interface so the real implementation (photos, storage, network)
-can replace the stub without touching the UI.
+The app follows a simple unidirectional flow: a `ViewModel` exposes a
+`StateFlow` of UI state and composables render it. All reads are `Flow`s from
+Room, so screens refresh themselves whenever data changes.
+
+Photos are stored as files in the app's private storage; the database keeps only
+their metadata (path, caption, GPS, timestamp). This keeps the database small
+and avoids loading image bytes into memory.
+
+## Testing
+
+```bash
+./gradlew test          # JVM tests (Robolectric, no device needed)
+./gradlew lint
+```
+
+The repository tests run Room against an in-memory database via Robolectric, so
+the data layer is verified without an emulator.
 
 ## Signing a release build
 
